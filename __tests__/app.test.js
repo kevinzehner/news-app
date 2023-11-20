@@ -4,6 +4,7 @@ const db = require("../db/connection");
 
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
+const endPoints = require("../endpoints.json");
 
 beforeEach(() => {
   return seed(data);
@@ -19,13 +20,23 @@ describe("GET /api/topics", () => {
       .get("/api/topics")
       .expect(200)
       .then((res) => {
-        console.log(res.body);
         res.body.topics.rows.forEach((topic) => {
           expect(topic).toMatchObject({
             slug: expect.any(String),
             description: expect.any(String),
           });
         });
+      });
+  });
+});
+
+describe("GET /api/", () => {
+  test("should return a JSON object describing the different endpoints", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toEqual({ endPoints });
       });
   });
 });
