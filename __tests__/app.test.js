@@ -14,25 +14,13 @@ afterAll(() => {
 });
 
 describe("GET /api/topics", () => {
-  test("200: Get successful status code", () => {
-    return request(app).get("/api/topics").expect(200);
-  });
-
-  test("200: Check returned result is an array", () => {
-    return request(app)
-      .get("/api/topics")
-      .expect(200)
-      .then((res) => {
-        console.log(res.body);
-        expect(Array.isArray(res.body)).toBe(true);
-      });
-  });
   test("200: Check the returned results keys are correct", () => {
     return request(app)
       .get("/api/topics")
       .expect(200)
       .then((res) => {
-        res.body.forEach((topic) => {
+        console.log(res.body);
+        res.body.topics.rows.forEach((topic) => {
           expect(topic).toMatchObject({
             slug: expect.any(String),
             description: expect.any(String),
