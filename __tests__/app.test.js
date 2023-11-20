@@ -64,7 +64,6 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/10002220")
       .expect(404)
       .then((res) => {
-        console.log(res);
         expect(res.body.msg).toBe("article does not exist");
       });
   });
@@ -73,7 +72,6 @@ describe("GET /api/articles/:article_id", () => {
       .get("/api/articles/hello")
       .expect(400)
       .then((res) => {
-        console.log(res);
         expect(res.body.msg).toBe("Bad request");
       });
   });
