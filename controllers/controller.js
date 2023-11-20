@@ -10,5 +10,5 @@ exports.getTopics = (req, res, next) => {
 };
 
 exports.getAPI = (req, res, next) => {
-  res.status(200).send(endPoints);
+  res.status(200).send({ endPoints });
 };
