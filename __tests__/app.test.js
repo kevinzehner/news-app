@@ -40,3 +40,39 @@ describe("GET /api/", () => {
       });
   });
 });
+
+describe("GET /api/articles/:article_id", () => {
+  test("should return an article object with the correct expected keys", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.article).toMatchObject({
+          author: expect.any(String),
+          title: expect.any(String),
+          article_id: expect.any(Number),
+          body: expect.any(String),
+          topic: expect.any(String),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          article_img_url: expect.any(String),
+        });
+      });
+  });
+  test("should respond with a 404 status code when given a valid ID but doesn't exist", () => {
+    return request(app)
+      .get("/api/articles/10002220")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("article does not exist");
+      });
+  });
+  test("should respond with a 400 status code when given an invalid ID", () => {
+    return request(app)
+      .get("/api/articles/hello")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad request");
+      });
+  });
+});
