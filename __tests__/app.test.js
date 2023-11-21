@@ -6,6 +6,8 @@ const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 const endPoints = require("../endpoints.json");
 
+const sorted = require("jest-sorted");
+
 beforeEach(() => {
   return seed(data);
 });
@@ -73,6 +75,42 @@ describe("GET /api/articles/:article_id", () => {
       .expect(400)
       .then((res) => {
         expect(res.body.msg).toBe("Bad request");
+      });
+  });
+});
+
+describe("GET /api/articles", () => {
+  test("200: Check the returned results keys are correct", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.articles.length).toBe(13);
+
+        res.body.articles.forEach((article) => {
+          expect(article).toMatchObject({
+            author: expect.any(String),
+            title: expect.any(String),
+            article_id: expect.any(Number),
+            body: expect.any(String),
+            topic: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(String),
+          });
+        });
+      });
+  });
+  test("200: should return a results array sorted in decending order by created_at ", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((res) => {
+        const articlesArr = res.body.articles;
+        expect(articlesArr).toBeSortedBy("created_at", {
+          descending: true,
+        });
       });
   });
 });
