@@ -49,8 +49,15 @@ exports.getComments = (req, res, next) => {
 
 exports.postComment = (req, res, next) => {
   const { article_id } = req.params;
+  
   const { body, username } = req.body;
+  if (!username || !body) {
+    return res.status(400).send({ msg: "Bad request" });
+  }
   checkExists("articles", "article_id", article_id)
+    .then(() => {
+      return checkExists("users", "username", username);
+    })
     .then(() => {
       return insertComment(article_id, username, body);
     })

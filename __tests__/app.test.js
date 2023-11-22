@@ -172,7 +172,7 @@ describe("GET /api/articles/:article_id/comments", () => {
 });
 
 describe("POST /api/articles/:article_id/comments", () => {
-  test("201: should post a new comment", () => {
+  test("201: should post a new comment and return the posted comment", () => {
     const testComment = {
       username: "butter_bridge",
       body: "testing a comment",
@@ -219,6 +219,34 @@ describe("POST /api/articles/:article_id/comments", () => {
       .expect(400)
       .then((res) => {
         expect(res.body.msg).toBe("Bad request");
+      });
+  });
+
+  test("400: should respond with 400 status code if the article id is invalid", () => {
+    const testComment = {
+      username: "butter_bridge",
+      body: "testing a comment",
+    };
+    return request(app)
+      .post("/api/articles/doesn'tExist/comments")
+      .send(testComment)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad request");
+      });
+  });
+  test("404: should respond with 404 status code for a non existant username", () => {
+    const testComment = {
+      username: "doesNotExist",
+      body: "testing a comment",
+    };
+
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(testComment)
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("not found");
       });
   });
 });
