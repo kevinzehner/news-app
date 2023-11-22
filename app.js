@@ -4,6 +4,7 @@ const {
   getAPI,
   getArticleByID,
   getArticles,
+  getComments,
 } = require("./controllers/controller");
 
 const {
@@ -21,6 +22,8 @@ app.get("/api", getAPI);
 app.get("/api/articles/:article_id", getArticleByID);
 
 app.get("/api/articles/", getArticles);
+
+app.get("/api/articles/:article_id/comments", getComments);
 
 app.use(handlePsqlError);
 app.use(handleCustomError);
