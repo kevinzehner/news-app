@@ -228,7 +228,7 @@ describe("POST /api/articles/:article_id/comments", () => {
       body: "testing a comment",
     };
     return request(app)
-      .post("/api/articles/doesn'tExist/comments")
+      .post("/api/articles/NOTVALID/comments")
       .send(testComment)
       .expect(400)
       .then((res) => {
@@ -288,6 +288,15 @@ describe("PATCH /api/articles/1", () => {
     return request(app)
       .patch("/api/articles/banana")
       .send({ inc_votes: 5 })
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad request");
+      });
+  });
+  test("400: should respond with a 400 status code if inc_votes has an invalid value", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: "not valid" })
       .expect(400)
       .then((res) => {
         expect(res.body.msg).toBe("Bad request");
