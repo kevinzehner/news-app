@@ -7,6 +7,7 @@ const {
   getComments,
   postComment,
   patchArticleVotes,
+  deleteComment,
 } = require("./controllers/controller");
 
 const {
@@ -31,6 +32,8 @@ app.get("/api/articles/:article_id/comments", getComments);
 app.post("/api/articles/:article_id/comments", postComment);
 
 app.patch("/api/articles/:article_id", patchArticleVotes);
+
+app.delete("/api/comments/:comment_id", deleteComment);
 
 app.use(handlePsqlError);
 app.use(handleCustomError);
