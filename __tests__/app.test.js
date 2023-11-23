@@ -302,4 +302,13 @@ describe("PATCH /api/articles/1", () => {
         expect(res.body.msg).toBe("Bad request");
       });
   });
+  test("400: should respond with a 400 status code if the body is missing inc_votes property", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ Votes: 5 })
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad request");
+      });
+  });
 });
