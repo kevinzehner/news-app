@@ -6,6 +6,7 @@ const {
   insertComment,
   updateArticleVotes,
   removeComment,
+  selectUsers,
 } = require("../models/model");
 const { checkExists } = require("../utils");
 const endPoints = require("../endpoints.json");
@@ -85,6 +86,14 @@ exports.deleteComment = (req, res, next) => {
   removeComment(comment_id)
     .then(() => {
       res.sendStatus(204).send();
+    })
+    .catch(next);
+};
+
+exports.getUsers = (req, res, next) => {
+  selectUsers()
+    .then((users) => {
+      res.status(200).send({ users });
     })
     .catch(next);
 };
