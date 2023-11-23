@@ -148,8 +148,15 @@ describe("GET /api/articles", () => {
         expect(res.body.msg).toBe("invalid topic");
       });
   });
+  test("200: should send back an empty array if the topic is valid but no articles are found", () => {
+    return request(app)
+      .get("/api/articles?topic=paper")
+      .expect(200)
+      .then((res) => {
+        expect(res.body.articles).toEqual([]);
+      });
+  });
 });
-
 
 describe("GET /api/articles/:article_id/comments", () => {
   test("200:returned comments array should hold objects with correct keys", () => {
