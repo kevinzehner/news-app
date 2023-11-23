@@ -33,7 +33,8 @@ exports.getArticleByID = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
-  selectArticles()
+  const query = req.query;
+  selectArticles(query)
     .then((articles) => {
       res.status(200).send({ articles });
     })
