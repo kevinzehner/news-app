@@ -5,6 +5,7 @@ const {
   selectComments,
   insertComment,
   updateArticleVotes,
+  removeComment,
 } = require("../models/model");
 const { checkExists } = require("../utils");
 const endPoints = require("../endpoints.json");
@@ -75,6 +76,15 @@ exports.patchArticleVotes = (req, res, next) => {
   updateArticleVotes(article_id, inc_votes)
     .then((article) => {
       res.status(200).send({ article });
+    })
+    .catch(next);
+};
+
+exports.deleteComment = (req, res, next) => {
+  const { comment_id } = req.params;
+  removeComment(comment_id)
+    .then(() => {
+      res.sendStatus(204).send();
     })
     .catch(next);
 };

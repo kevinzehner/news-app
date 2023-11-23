@@ -312,3 +312,26 @@ describe("PATCH /api/articles/1", () => {
       });
   });
 });
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("204: should delete the comment with the selected comment ID", () => {
+    return request(app).delete("/api/comments/1").expect(204);
+  });
+
+  test("404: should respond with a 404 not found if the given comment does not exist", () => {
+    return request(app)
+      .delete("/api/comments/999")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("not found");
+      });
+  });
+  test("404: should respond with a 400 bad request if the comment ID is invalid", () => {
+    return request(app)
+      .delete("/api/comments/I'm an invalid comment")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad request");
+      });
+  });
+});
