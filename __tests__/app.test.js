@@ -228,7 +228,7 @@ describe("POST /api/articles/:article_id/comments", () => {
       body: "testing a comment",
     };
     return request(app)
-      .post("/api/articles/doesn'tExist/comments")
+      .post("/api/articles/NOTVALID/comments")
       .send(testComment)
       .expect(400)
       .then((res) => {
@@ -247,6 +247,68 @@ describe("POST /api/articles/:article_id/comments", () => {
       .expect(404)
       .then((res) => {
         expect(res.body.msg).toBe("not found");
+      });
+  });
+});
+
+describe("PATCH /api/articles/1", () => {
+  test("200: should update the number of votes and return the article", () => {
+    const testUpdate = {
+      inc_votes: 10,
+    };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(testUpdate)
+      .expect(200)
+      .then((res) => {
+        expect(res.body.article).toMatchObject({
+          article_id: 1,
+          title: "Living in the shadow of a great man",
+          topic: "mitch",
+          author: "butter_bridge",
+          body: "I find this existence challenging",
+          created_at: "2020-07-09T20:11:00.000Z",
+          votes: 110,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        });
+      });
+  });
+  test("404: should respond with 404 status code if the given id is valid but the article doesn't exist", () => {
+    return request(app)
+      .patch("/api/articles/1000")
+      .send({ inc_votes: 5 })
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("not found");
+      });
+  });
+
+  test("400: should respond with a 400 status code when given an invalid ID", () => {
+    return request(app)
+      .patch("/api/articles/banana")
+      .send({ inc_votes: 5 })
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad request");
+      });
+  });
+  test("400: should respond with a 400 status code if inc_votes has an invalid value", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ inc_votes: "not valid" })
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad request");
+      });
+  });
+  test("400: should respond with a 400 status code if the body is missing inc_votes property", () => {
+    return request(app)
+      .patch("/api/articles/1")
+      .send({ Votes: 5 })
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad request");
       });
   });
 });
