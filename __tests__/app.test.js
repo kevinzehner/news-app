@@ -170,3 +170,83 @@ describe("GET /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("201: should post a new comment and return the posted comment", () => {
+    const testComment = {
+      username: "butter_bridge",
+      body: "testing a comment",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(testComment)
+      .expect(201)
+      .then((res) => {
+        expect(res.body).toMatchObject({
+          comment: {
+            article_id: 1,
+            author: "butter_bridge",
+            body: "testing a comment",
+            comment_id: expect.any(Number),
+            created_at: expect.any(String),
+            votes: 0,
+          },
+        });
+      });
+  });
+
+  test("404: should respond with 404 status code if the given id is valid but the article doesn't exist", () => {
+    const testComment = {
+      username: "butter_bridge",
+      body: "testing a comment",
+    };
+    return request(app)
+      .post("/api/articles/1000/comments")
+      .send(testComment)
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("not found");
+      });
+  });
+
+  test("400: should receive an error if username or body are missing ", () => {
+    const testComment = {
+      body: "testing a comment",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(testComment)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad request");
+      });
+  });
+
+  test("400: should respond with 400 status code if the article id is invalid", () => {
+    const testComment = {
+      username: "butter_bridge",
+      body: "testing a comment",
+    };
+    return request(app)
+      .post("/api/articles/doesn'tExist/comments")
+      .send(testComment)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad request");
+      });
+  });
+  test("404: should respond with 404 status code for a non existant username", () => {
+    const testComment = {
+      username: "doesNotExist",
+      body: "testing a comment",
+    };
+
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(testComment)
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("not found");
+      });
+  });
+});

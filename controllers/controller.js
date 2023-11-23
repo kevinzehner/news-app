@@ -3,6 +3,7 @@ const {
   selectArticleByID,
   selectArticles,
   selectComments,
+  insertComment,
 } = require("../models/model");
 const { checkExists } = require("../utils");
 const endPoints = require("../endpoints.json");
@@ -42,6 +43,26 @@ exports.getComments = (req, res, next) => {
     .then(() => selectComments(article_id))
     .then((comments) => {
       res.status(200).send({ comments });
+    })
+    .catch(next);
+};
+
+exports.postComment = (req, res, next) => {
+  const { article_id } = req.params;
+  
+  const { body, username } = req.body;
+  if (!username || !body) {
+    return res.status(400).send({ msg: "Bad request" });
+  }
+  checkExists("articles", "article_id", article_id)
+    .then(() => {
+      return checkExists("users", "username", username);
+    })
+    .then(() => {
+      return insertComment(article_id, username, body);
+    })
+    .then((comment) => {
+      res.status(201).send({ comment });
     })
     .catch(next);
 };
