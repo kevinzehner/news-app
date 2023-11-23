@@ -4,6 +4,7 @@ const {
   selectArticles,
   selectComments,
   insertComment,
+  updateArticleVotes,
 } = require("../models/model");
 const { checkExists } = require("../utils");
 const endPoints = require("../endpoints.json");
@@ -49,7 +50,7 @@ exports.getComments = (req, res, next) => {
 
 exports.postComment = (req, res, next) => {
   const { article_id } = req.params;
-  
+
   const { body, username } = req.body;
   if (!username || !body) {
     return res.status(400).send({ msg: "Bad request" });
@@ -63,6 +64,17 @@ exports.postComment = (req, res, next) => {
     })
     .then((comment) => {
       res.status(201).send({ comment });
+    })
+    .catch(next);
+};
+
+exports.patchArticleVotes = (req, res, next) => {
+  const { article_id } = req.params;
+  const { inc_votes } = req.body;
+
+  updateArticleVotes(article_id, inc_votes)
+    .then((article) => {
+      res.status(200).send({ article });
     })
     .catch(next);
 };

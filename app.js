@@ -6,6 +6,7 @@ const {
   getArticles,
   getComments,
   postComment,
+  patchArticleVotes,
 } = require("./controllers/controller");
 
 const {
@@ -28,6 +29,8 @@ app.get("/api/articles/", getArticles);
 app.get("/api/articles/:article_id/comments", getComments);
 
 app.post("/api/articles/:article_id/comments", postComment);
+
+app.patch("/api/articles/:article_id", patchArticleVotes);
 
 app.use(handlePsqlError);
 app.use(handleCustomError);
