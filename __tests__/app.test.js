@@ -77,8 +77,35 @@ describe("GET /api/articles/:article_id", () => {
         expect(res.body.msg).toBe("Bad request");
       });
   });
+  test("200: should include comment_count in the response", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then((res) => {
+        const article = res.body.article;
+        expect(article).toMatchObject({
+          author: expect.any(String),
+          title: expect.any(String),
+          article_id: expect.any(Number),
+          body: expect.any(String),
+          topic: expect.any(String),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          article_img_url: expect.any(String),
+          comment_count: "11",
+        });
+      });
+  });
+  test("200: Comment count should be 0 if the article ID is valid but there are no comments", () => {
+    return request(app)
+      .get("/api/articles/2")
+      .expect(200)
+      .then((res) => {
+        const article = res.body.article;
+        expect(article.comment_count).toBe("0");
+      });
+  });
 });
-
 describe("GET /api/articles", () => {
   test("200: Check the returned results keys are correct", () => {
     return request(app)
