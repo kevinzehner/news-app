@@ -23,10 +23,26 @@ exports.selectArticleByID = (article_id) => {
 };
 
 exports.selectArticles = (query) => {
-  const { topic } = query;
+  const { topic, sort_by, order } = query;
 
   if (topic && !["mitch", "cats", "paper"].includes(topic)) {
     return Promise.reject({ status: 400, msg: "invalid topic" });
+  }
+
+  const validSortColumns = [
+    "created_at",
+    "title",
+    "author",
+    "votes",
+    "comment_count",
+  ];
+
+  if (sort_by && !validSortColumns.includes(sort_by)) {
+    return Promise.reject({ status: 400, msg: "invalid sort_by column" });
+  }
+
+  if (order && !["asc", "desc"].includes(order)) {
+    return Promise.reject({ status: 400, msg: "invalid order" });
   }
 
   let queryStr = `
@@ -44,8 +60,13 @@ exports.selectArticles = (query) => {
 
   queryStr += `
   GROUP BY articles.article_id
-  ORDER BY created_at DESC
-`;
+  `;
+
+  if (sort_by) {
+    queryStr += `ORDER BY ${sort_by} ${order || "DESC"}`;
+  } else {
+    queryStr += `ORDER BY created_at DESC`;
+  }
 
   return db.query(queryStr, queryValues).then(({ rows }) => {
     return rows;

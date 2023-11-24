@@ -183,6 +183,47 @@ describe("GET /api/articles", () => {
         expect(res.body.articles).toEqual([]);
       });
   });
+  test("200: should sort articles by a specified column in ascending order", () => {
+    return request(app)
+      .get("/api/articles?sort_by=votes&order=asc")
+      .expect(200)
+      .then((res) => {
+        const articlesArr = res.body.articles;
+        expect(articlesArr).toBeSortedBy("votes", {
+          descending: false,
+        });
+      });
+  });
+
+  test("200: should sort articles by a specified column in descending order", () => {
+    return request(app)
+      .get("/api/articles?sort_by=created_at&order=desc")
+      .expect(200)
+      .then((res) => {
+        const articlesArr = res.body.articles;
+        expect(articlesArr).toBeSortedBy("created_at", {
+          descending: true,
+        });
+      });
+  });
+
+  test("400: should respond with a 400 error if sort_by column is not valid", () => {
+    return request(app)
+      .get("/api/articles?sort_by=invalid_column")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("invalid sort_by column");
+      });
+  });
+
+  test("400: should respond with a 400 error if order is not 'asc' or 'desc'", () => {
+    return request(app)
+      .get("/api/articles?order=invalid_order")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("invalid order");
+      });
+  });
 });
 
 describe("GET /api/articles/:article_id/comments", () => {
