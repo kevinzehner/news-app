@@ -8,13 +8,9 @@ Some of the key features include:
 - A voting system to ‘score’ articles from users
 - Posting comments
 
-Instructions for use:
+Instructions for use
 
-Please note this project is run with node js and PQSL
-
-Your node.js version should be compatible with the current version used by express and PG. Node-postgres is compatible with node 8.x, 10.x, 12.x and 14.x To use node >= 14.x you will need to install pg@8.2.x
-
-The project has been tested with the following:
+note this project is run with node js and PQSL. To run the project install following versions
 
 Node js - 20.7.0
 PG - ^8.7.3
@@ -38,10 +34,11 @@ PGDATABASE=nc_news
 .env.test
 PGDATABASE=nc_news_test
 
-Once you have completed this step you can run the following scripts:
+Once you have completed this step you can run npm install and then run the following scripts:
 
-Npm run setup-dbs
-Npm run seed
+`npm run setup-dbs`
+
+npm run seed
 
 This will connect and seed the database
 
