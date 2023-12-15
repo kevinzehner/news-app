@@ -25,7 +25,7 @@ exports.selectArticleByID = (article_id) => {
 exports.selectArticles = (query) => {
   const { topic, sort_by, order } = query;
 
-  if (topic && !["mitch", "cats", "paper"].includes(topic)) {
+  if (topic && !["football", "coding", "cooking"].includes(topic)) {
     return Promise.reject({ status: 400, msg: "invalid topic" });
   }
 
